@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Grade Calculator for the Ultimate Dashboard</title>
+  <style>
+    .hidden {
+      display: none;
+    }
+    body {
+      text-align: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      $background-image: url("https://cdn11.bigcommerce.com/s-65f8qukrjx/images/stencil/960w/products/7684/18003/System_Collapse_1__41016.1710252454.jpg?c=1");
+      font-family: Arial, Helvetica, sans-serif;
+    }
+  </style>
+</head>
+<body>
+<div style="background-color: lightblue">
+	<a href src="file:///C:/Users/Charl/Documents/UltimateDash.html">Homepage- Dashboard</a>
+	 | 
+	<a href src="file:///C:/Users/Charl/Downloads/Grade_Calculator_final.html">GPA Calculator for Diddybluds</a>
+	
+    </div>
+  <h1 style="font-family: Arial, sans-serif; font-size: 24px; color: blue;">Grade Calculator for the Ultimate Dashboard</h1>
+  <p>Input your grade to calculate your GPA!</p>
+
+  <!-- Main form with dropdown -->
+  <form id="mainForm">
+    <label for="optionSelect">Choose your curriculum:</label>
+    <select id="optionSelect">
+      <option value="">--Select--</option>
+      <option value="form1">MYP</option>
+      <option value="form2">IGCSE</option>
+      <option value="form3">IB</option>
+    </select>
+  </form>
+
+  <!-- MYP form -->
+  <form id="form1" class="hidden">
+    <h3>MYP Grade Calculator</h3>
+    <label>Subject names:</label><br>
+    <input type="text" style="width:100px; height:25px;" name="subjectA">
+    <input type="text" style="width:100px; height:25px;" name="subjectB">
+    <input type="text" style="width:100px; height:25px;" name="subjectC">
+    <input type="text" style="width:100px; height:25px;" name="subjectD">
+    <input type="text" style="width:100px; height:25px;" name="subjectE">
+    <input type="text" style="width:100px; height:25px;" name="subjectF">
+    <input type="text" style="width:100px; height:25px;" name="subjectG">
+    <input type="text" style="width:100px; height:25px;" name="subjectH">
+    <input type="text" style="width:100px; height:25px;" name="subjectI">
+    <input type="text" style="width:100px; height:25px;" name="subjectJ">
+    <br><br>
+
+    <label>Grades (0–7):</label><br>
+    <input type="number" style="width:100px; height:25px;" id="field1">
+    <input type="number" style="width:100px; height:25px;" id="field2">
+    <input type="number" style="width:100px; height:25px;" id="field3">
+    <input type="number" style="width:100px; height:25px;" id="field4">
+    <input type="number" style="width:100px; height:25px;" id="field5">
+    <input type="number" style="width:100px; height:25px;" id="field6">
+    <input type="number" style="width:100px; height:25px;" id="field7">
+    <input type="number" style="width:100px; height:25px;" id="field8">
+    <input type="number" style="width:100px; height:25px;" id="field9">
+    <input type="number" style="width:100px; height:25px;" id="field10">
+    <br><br>
+
+    <button type="button" onclick="calculateAverage()">Calculate Average</button>
+  </form>
+
+  <!-- Other forms -->
+  <form id="form2" class="hidden">
+    <h3>IGCSE Grade Calculator</h3>
+    <p>Coming soon...</p>
+  </form>
+
+  <form id="form3" class="hidden">
+    <h3>IB Grade Calculator</h3>
+    <p>Coming soon...</p>
+  </form>
+
+  <!-- Result output -->
+  <p id="result"></p>
+
+  <script>
+    const select = document.getElementById('optionSelect');
+    const forms = document.querySelectorAll('form:not(#mainForm)');
+
+    select.addEventListener('change', function() {
+      // Hide all forms
+      forms.forEach(form => form.classList.add('hidden'));
+
+      // Show the selected form
+      const selectedForm = document.getElementById(this.value);
+      if (selectedForm) {
+        selectedForm.classList.remove('hidden');
+      }
+    });
+
+    function calculateAverage() {
+      let sum = 0;
+      let count = 0;
+
+      for (let i = 1; i <= 10; i++) {
+        let value = parseFloat(document.getElementById('field' + i).value);
+        if (!isNaN(value)) {
+          sum += value;
+          count++;
+        }
+      }
+
+      if (count > 0) {
+        let average = sum / count;
+        document.getElementById('result').textContent = "Average: " + average.toFixed(2);
+      } else {
+        document.getElementById('result').textContent = "Please enter at least one grade.";
+      }
+    }
+  </script>
+</body>
+</html>
