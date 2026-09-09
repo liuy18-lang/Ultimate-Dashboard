@@ -1,6 +1,13 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Navbar</title>
+</head>
+<body>
 <ul style="display:flex;align-items:center;gap:15px;list-style:none;">
-    <li><img src="https://deltarune.wiki/images/Electro-Dasher_overworld_miniature.gif?cb=npvaxf&h=thumb.php&f=Electro-Dasher_overworld_miniature.gif" height="30"></li>
+    <li><img src="https://deltarune.wiki/images/Electro-Dasher_overworld_miniature.gif?cb=npvaxf&h=thumb.php&f=Electro-Dasher_overworld_miniature.gif" height="30" alt="logo"></li>
     <li><a href="/Mini-Internet/">Homepage</a></li>
     <li><a href="/Mini-Internet/Grade_Calculator_final.html">GPA Calculator</a></li>
     <li><a href="/Mini-Internet/GameDash.html">Game Dashboard</a></li>
@@ -8,53 +15,89 @@
     <li><a href="/Mini-Internet/Textbook_arch.html">The Archive</a></li>
     <li><a href="https://padlet.com/liuy18_3/ultimate-dashboard-updates-edi6008puh0cvift">DELTARUNE</a></li>
     <li><a href="/Mini-Internet/Textbook_arch.html">Coming Soon...</a></li>
-    
+
 
     <!-- Username + PFP (replaces Account) -->
     <li style="display:flex;align-items:center;gap:8px;">
-        <a href="/Mini-Internet/Signin.html">
+        <a id="navAccountLink" href="/Mini-Internet/Signin.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;">
+
         <img id="navPfp" 
              src="" 
              alt="Profile" 
-             style="width:40px;height:40px;border-radius:50%;display:none;">
+             style="width:40px;height:40px;border-radius:50%;display:none;object-fit:cover;">
 
         <span id="navUsername" 
               style="font-weight:bold;display:none;"></span>
+
+        <!-- fallback shown when not signed in -->
+        <span id="navAccountFallback" style="font-weight:bold;display:inline-block;">Account</span>
         </a>
     </li>
 </ul>
 
 <script>
 function getCookie(name) {
-  const cname = name + "=";
-  const decoded = decodeURIComponent(document.cookie);
-  const parts = decoded.split(";");
-  for (let p of parts) {
-    p = p.trim();
-    if (p.indexOf(cname) === 0) {
-      return p.substring(cname.length);
-    }
-  }
-  return "";
+  // robust cookie getter using regex
+  const match = document.cookie.match('(^|;)\\s*' + name + '=([^;]*)');
+  return match ? decodeURIComponent(match[2]) : '';
+}
+
+function isValidValue(v) {
+  return v !== null && v !== undefined && v !== '' && v !== 'undefined' && v !== 'null';
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  const pfp = getCookie("pfp");
-  const username = getCookie("username");
+  // Try cookies first, then fall back to localStorage (useful for development)
+  let pfp = getCookie("pfp");
+  let username = getCookie("username");
 
-  // Show profile picture
-  if (pfp && pfp !== "undefined" && pfp !== "") {
-    const img = document.getElementById("navPfp");
-    img.src = pfp;
-    img.style.display = "inline-block";
+  if (!isValidValue(pfp)) {
+    pfp = localStorage.getItem('pfp') || '';
+  }
+  if (!isValidValue(username)) {
+    username = localStorage.getItem('username') || '';
   }
 
-  // Show username
-  if (username && username !== "undefined" && username !== "") {
-    const nameEl = document.getElementById("navUsername");
+  // Debug logs (remove in production)
+  console.log('Navbar: document.cookie=%o', document.cookie);
+  console.log('Navbar: pfp=', pfp, 'username=', username);
+
+  const img = document.getElementById("navPfp");
+  const nameEl = document.getElementById("navUsername");
+  const fallback = document.getElementById('navAccountFallback');
+  const link = document.getElementById('navAccountLink');
+
+  // Show profile picture if valid
+  if (isValidValue(pfp)) {
+    try {
+      img.src = pfp;
+      img.style.display = 'inline-block';
+    } catch (e) {
+      console.warn('Navbar: failed to set pfp', e);
+    }
+  } else {
+    img.style.display = 'none';
+  }
+
+  // Show username if valid
+  if (isValidValue(username)) {
     nameEl.textContent = username;
-    nameEl.style.display = "inline-block";
+    nameEl.style.display = 'inline-block';
+  } else {
+    nameEl.style.display = 'none';
+  }
+
+  // If either pfp or username is present, hide the fallback "Account" text
+  if (isValidValue(pfp) || isValidValue(username)) {
+    fallback.style.display = 'none';
+    // make the link point to profile page instead of signin when signed in
+    link.href = '/Mini-Internet/Profile.html';
+  } else {
+    // not signed in: show fallback and point to Signin
+    fallback.style.display = 'inline-block';
+    link.href = '/Mini-Internet/Signin.html';
   }
 });
 </script>
+</body>
 </html>
